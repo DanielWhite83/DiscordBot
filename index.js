@@ -7,6 +7,19 @@ const client = new Discord.Client();
 
 const prefix = '#';
 
+const fs = require('fs');
+client.commands = new Discord.Collection();
+const commandfiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for (const file of commandfiles){
+    const command = require(`./commands/${file}`);
+
+    client.commands.set(command.name, command);
+}
+
+
+
+
+
 client.once('ready', () => {
     console.log('Bot is online')
 });
@@ -16,14 +29,14 @@ client.on('message', message =>{
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
-
-    if(command == 'ping'){
-        message.channel.send('pong!');
-
+    
+    try {
+        client.commands.get(command).execute(message,args);
     }
-    else if (command == 'youtube'){
-        message.channel.send('yep!');
+    catch(err){
+        console.log("command: " + command + " not found!");
     }
+        
 
 
 });
