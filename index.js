@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 
-const prefix = '#';
+const prefix = '!';
 
 const fs = require('fs');
 client.commands = new Discord.Collection();
@@ -15,10 +15,6 @@ for (const file of commandfiles){
 
     client.commands.set(command.name, command);
 }
-
-
-
-
 
 client.once('ready', () => {
     console.log('Bot is online')
@@ -34,7 +30,7 @@ client.on('message', message =>{
         client.commands.get(command).execute(message,args);
     }
     catch(err){
-        console.log("command: " + command + " not found!");
+        console.log(err);
     }
         
 
